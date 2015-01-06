@@ -1,7 +1,13 @@
 
 $(document).ready(function(){
-	
+	//do i need so many functions? 
+
 	//question - do this here or in the game function?
+	//best way to see what is getting called - console logs or other way in dev tools
+	//best way to reload/refresh page
+	//what makes the URL track the entry - is that the html?
+	//when best to convert to numeric
+
 
 	//variables to track
 	//secretNumber
@@ -9,7 +15,7 @@ $(document).ready(function(){
 	//lastGuess
 	//numberOfGuesses
 
-	newGame();
+	//newGame();
 
 	/*--- Display information modal box ---*/
   	$(".what").click(function(){
@@ -31,6 +37,8 @@ $(document).ready(function(){
   			newGameButton();
   		});
 
+  	$("#guessButton").click( function() {processGuess();});
+
 
   	function newGame(){
   		//need global scope outside of functoin
@@ -39,17 +47,45 @@ $(document).ready(function(){
   		console.log("newGame called");
   		secretNumber = generateSecretNumber();
   		console.log(secretNumber);
+  		window.location.reload(true);
+  	}
+
+  	function processGuess(){
+  		guessedNumber = getGuess();
+  		console.log("guess " + guessedNumber);
+  	}
+
+  	function getGuess(){
+  		console.log("getGuess Called");
+  		var entry = +$("#userGuess").val();  //change to numeric here
+  		
+  		if (isValidEntry(entry)) {
+  			console.log("type of entry:" + typeof entry);
+  			return entry;	//not sure if have to convert
+  		}
+  		else
+  		{
+  			badEntryFeedback();
+  		}
+  	}
+
+  	function badEntryFeedback(){
+  		console.log("badentry called")
+  		$("#feedback").text("Someone can't follow instructions - enter a number between 1 and 100 bro!");
   	}
 
   	function isValidEntry(guessedNumber){
-  		//numeric bw 1 and 100
-  		//bool
+  		console.log("checking if valid- " + guessedNumber);
+  		console.log(typeof guessedNumber);
+  		
+  		return (!isNaN(guessedNumber) &&
+  			(guessedNumber % 1) == 0);
   	}
 
   	function generateSecretNumber()
   	{
   		//random bw 1-100 return number
-  		//return global scope variable
+  		//added 1 so i could get 1 and 100 using floor
   		return Math.floor(Math.random() * 100 + 1);
   	}
 
