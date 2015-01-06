@@ -44,8 +44,11 @@ $(document).ready(function(){
   			newGameButton();
   		});
 
-  	$("#guessButton").click( function() {processGuess();});
+  	$("#guessButton").click( function() {
+  		processGuess();
+  	});
 
+  	//add enter button logic
 
   	function newGame(){
   		//need global scope outside of functoin
@@ -54,10 +57,17 @@ $(document).ready(function(){
   		console.log("newGame called");
   		secretNumber = generateSecretNumber();
   		guessCount = 0;
+  		gameWon = false; //create this here, do i need this at all?
   		console.log(secretNumber);
   	}
   	
   	function processGuess(){
+  		//better place for this?
+  		if (gameWon) {
+  			$('#feedback').text("You already are a champ, don't get greedy now but use the new game button above!");
+  			return;
+  		}		
+
   		var guessedNumber = getGuess();
 		console.log("guess " + guessedNumber);
   		
@@ -105,7 +115,8 @@ $(document).ready(function(){
   		console.log("feedback called");
   		
   		if (isCorrectGuess(guessedNumber)) {
-  			$("#feedback").text("Who wants to be a millonaire! You win, play again!")
+  			$("#feedback").text("Who wants to be a millonaire! You win, play again!");
+  			gameWon = true;
   		}
   		else {	
   			var difference = findDifferenceFromSecret(guessedNumber);
