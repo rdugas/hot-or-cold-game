@@ -10,6 +10,9 @@ $(document).ready(function(){
 	//button type needed to be button not submit for page load to not happen
 	//can params of diff functions have same name as another global variable -ie: guessednumber
 
+	//future
+	//if win, dont let them guess again
+
 	newGame();
 	console.log("page load");
 
@@ -50,29 +53,29 @@ $(document).ready(function(){
   		//setup new game when button or page load
   		console.log("newGame called");
   		secretNumber = generateSecretNumber();
+  		guessCount = 0;
   		console.log(secretNumber);
-  		
   	}
-
+  	
   	function processGuess(){
   		var guessedNumber = getGuess();
-  		console.log("guess " + guessedNumber);
-  		$("#userGuess").val(""); //remove gues from guess box
-  		giveFeedbackBasedOnGuess(guessedNumber);
+		console.log("guess " + guessedNumber);
+  		
+  		if (isValidEntry(guessedNumber)) {
+  			giveFeedbackBasedOnGuess(guessedNumber);
+  			updateGuessList(guessedNumber);
+  			updateGuessCount();
+  		}
+  		else {
+  			badEntryFeedback();
+  		}
+  		
+  		$("#userGuess").val(""); //remove guess from guess box
   	}
 
   	function getGuess(){
   		console.log("getGuess Called");
-  		var entry = +$("#userGuess").val();  //change to numeric here
-  		
-  		if (isValidEntry(entry)) {
-  			console.log("type of entry:" + typeof entry);
-  			return entry;	//not sure if have to convert
-  		}
-  		else
-  		{
-  			badEntryFeedback();
-  		}
+  		return +$("#userGuess").val();  //change to numeric here
   	}
 
   	function badEntryFeedback(){
@@ -107,8 +110,7 @@ $(document).ready(function(){
   		else {	
   			var difference = findDifferenceFromSecret(guessedNumber);
   			console.log("difference: " + difference)
-  			alert(generateDifferenceRangeMessage(difference));
-  			//update guess list
+  			generateDifferenceRangeFeedbackMessage(difference);
   		}	
   	}
 
@@ -120,23 +122,31 @@ $(document).ready(function(){
   	}
 
   	function findDifferenceFromSecret(guessedNumber) {
-  		return Math.abs(secret - guessedNumber);
+  		return Math.abs(secretNumber - guessedNumber);
   	}
 
-  	function generateDifferenceRangeMessage(differenceValue){
-  		 //>= 50
-  		 //35 and 50
-  		 //20 and 35
-  		 //10 and 20
-  		 //5 and 10
-  		 //1 and 5
+  	function generateDifferenceRangeFeedbackMessage(differenceValue){
 
+  		 if (differenceValue >= 50) {feedbackString = "You are artic Cold";}
+  		 else if (differenceValue >= 30) {feedbackString = "You are Alaska Cold";}
+  		 else if (differenceValue >= 15) {feedbackString = "Chicago Cold";}
+  		 else if (differenceValue >= 10) {feedbackString = "Florida Warm";}
+  		 else if (differenceValue >= 5) {feedbackString = "Mexico Hot";}
+  		 else if (differenceValue >= 1) {feedbackString = "So close, don't melt.";}
+  		 
   		 $("#feedback").text(feedbackString);
   	}
 
   	function updateGuessList(numberToAddToGuessList)
   	{
-  		numberToAddToGuessList.appendTo("#guessList");
+  		console.log(numberToAddToGuessList);
+  		$('<li>'+numberToAddToGuessList+'</li>').appendTo("#guessList");
+  	}
+
+  	function updateGuessCount()
+  	{
+  		guessCount += 1;
+  		$("#count").text(guessCount);
   	}
 
   	function newGameButton(){
