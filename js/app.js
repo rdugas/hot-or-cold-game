@@ -8,9 +8,11 @@ $(document).ready(function(){
 	//what makes the URL track the entry - is that the html?
 	//when best to convert to numeric
 	//button type needed to be button not submit for page load to not happen
+	//can params of diff functions have same name as another global variable -ie: guessednumber
 
-
+	newGame();
 	console.log("page load");
+
 	//variables to track
 	//secretNumber
 	//guess
@@ -49,13 +51,14 @@ $(document).ready(function(){
   		console.log("newGame called");
   		secretNumber = generateSecretNumber();
   		console.log(secretNumber);
-  		window.location.reload(true);
+  		
   	}
 
   	function processGuess(){
-  		guessedNumber = getGuess();
+  		var guessedNumber = getGuess();
   		console.log("guess " + guessedNumber);
   		$("#userGuess").val(""); //remove gues from guess box
+  		giveFeedbackBasedOnGuess(guessedNumber);
   	}
 
   	function getGuess(){
@@ -94,13 +97,12 @@ $(document).ready(function(){
   		return Math.floor(Math.random() * 100 + 1);
   	}
 
-  	function isCorrectGuess(guessedNumber){
-  		//compare to secret return bool
-  	}
-
+  
   	function giveFeedbackBasedOnGuess(guessedNumber){
-  		if (isCorrectGuess) {
-  			//display correct
+  		console.log("feedback called");
+  		
+  		if (isCorrectGuess(guessedNumber)) {
+  			$("#feedback").text("Who wants to be a millonaire! You win, play again!")
   		}
   		else {	
   			var difference = findDifferenceFromSecret(guessedNumber);
@@ -108,6 +110,13 @@ $(document).ready(function(){
   			alert(generateDifferenceRangeMessage(difference));
   			//update guess list
   		}	
+  	}
+
+  	function isCorrectGuess(guessedNumber){
+  		console.log("is correct: " + (guessedNumber == secretNumber));
+  		console.log(secretNumber);
+  		console.log(guessedNumber);
+  		return (guessedNumber == secretNumber);
   	}
 
   	function findDifferenceFromSecret(guessedNumber) {
@@ -135,7 +144,7 @@ $(document).ready(function(){
   		console.log("newGameButtonCalled");
   		areYouSure = confirm("Are you sure you want to start a new game?");
   		if (areYouSure) {
-  			newGame();	
+  			window.location.reload(true);	
   		}
   	}
   	
