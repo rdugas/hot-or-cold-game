@@ -7,8 +7,10 @@ $(document).ready(function(){
 	//best way to reload/refresh page
 	//what makes the URL track the entry - is that the html?
 	//when best to convert to numeric
+	//button type needed to be button not submit for page load to not happen
 
 
+	console.log("page load");
 	//variables to track
 	//secretNumber
 	//guess
@@ -53,6 +55,7 @@ $(document).ready(function(){
   	function processGuess(){
   		guessedNumber = getGuess();
   		console.log("guess " + guessedNumber);
+  		$("#userGuess").val(""); //remove gues from guess box
   	}
 
   	function getGuess(){
@@ -70,7 +73,7 @@ $(document).ready(function(){
   	}
 
   	function badEntryFeedback(){
-  		console.log("badentry called")
+  		console.log("badentry called");
   		$("#feedback").text("Someone can't follow instructions - enter a number between 1 and 100 bro!");
   	}
 
@@ -79,7 +82,9 @@ $(document).ready(function(){
   		console.log(typeof guessedNumber);
   		
   		return (!isNaN(guessedNumber) &&
-  			(guessedNumber % 1) == 0);
+  			(guessedNumber % 1) == 0 &&
+  			 guessedNumber >= 1 &&	
+  			 guessedNumber <=100);
   	}
 
   	function generateSecretNumber()
