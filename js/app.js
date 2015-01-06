@@ -36,7 +36,7 @@ $(document).ready(function(){
 
 	//on new game button click start new game
 	//this way did not work - fired on page load
-  	//$("a.newGame").click( newGameButton());
+  	// $("a.newGame").click( newGameButton());
 
   	//had to do this way otherwise it was firing on page load
   	$("a.newGame").click( function()
@@ -47,6 +47,16 @@ $(document).ready(function(){
   	$("#guessButton").click( function() {
   		processGuess();
   	});
+	
+	$(document).keypress(function(e){
+		if (e.which == 13){
+			
+			e.preventDefault(); //added so the html required model does not popup on enter after value clears.  It does not pop up if click the button
+			
+			console.log("enter hit");
+			$("#guessButton").click();
+		}
+	});
 
   	//add enter button logic
 
@@ -79,11 +89,15 @@ $(document).ready(function(){
   		else {
   			badEntryFeedback();
   		}
-  		
-  		$("#userGuess").val(""); //remove guess from guess box
+		
+		clearGuess();
   	}
 
-  	function getGuess(){
+  	function clearGuess(){
+  		$("#userGuess").val(""); //remove guess from guess box
+  	}
+	
+	function getGuess(){
   		console.log("getGuess Called");
   		return +$("#userGuess").val();  //change to numeric here
   	}
