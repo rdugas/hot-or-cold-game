@@ -67,6 +67,7 @@ $(document).ready(function(){
   		console.log("newGame called");
   		secretNumber = generateSecretNumber();
   		guessCount = 0;
+      guessDifferenceArray = [];
   		gameWon = false; //create this here, do i need this at all?
   		console.log(secretNumber);
   	}
@@ -79,12 +80,12 @@ $(document).ready(function(){
   		}		
 
   		var guessedNumber = getGuess();
-		console.log("guess " + guessedNumber);
+		  console.log("guess " + guessedNumber);
   		
   		if (isValidEntry(guessedNumber)) {
-  			giveFeedbackBasedOnGuess(guessedNumber);
-  			updateGuessList(guessedNumber);
   			updateGuessCount();
+        giveFeedbackBasedOnGuess(guessedNumber);
+  			updateGuessList(guessedNumber);
   		}
   		else {
   			badEntryFeedback();
@@ -123,7 +124,6 @@ $(document).ready(function(){
   		//added 1 so i could get 1 and 100 using floor
   		return Math.floor(Math.random() * 100 + 1);
   	}
-
   
   	function giveFeedbackBasedOnGuess(guessedNumber){
   		console.log("feedback called");
@@ -135,8 +135,12 @@ $(document).ready(function(){
   		else {	
   			var difference = findDifferenceFromSecret(guessedNumber);
   			console.log("difference: " + difference)
-  			generateDifferenceRangeFeedbackMessage(difference);
-  		}	
+  			storeDifferenceFromSecret(difference); //should be moved out of this method.
+        generateDifferenceRangeFeedbackMessage(difference);
+        console.log("diff array: " + guessDifferenceArray)
+
+  		}
+
   	}
 
   	function isCorrectGuess(guessedNumber){
@@ -146,19 +150,41 @@ $(document).ready(function(){
   		return (guessedNumber == secretNumber);
   	}
 
+
   	function findDifferenceFromSecret(guessedNumber) {
   		return Math.abs(secretNumber - guessedNumber);
   	}
 
+    function storeDifferenceFromSecret(differenceAbsValue) {
+        guessDifferenceArray.push(differenceAbsValue);
+    }
+
   	function generateDifferenceRangeFeedbackMessage(differenceValue){
 
-  		 if (differenceValue >= 50) {feedbackString = "You are artic Cold";}
+       var hotterText = "You are getting warmer, get the sunscreen...";
+       var colderText = "Put on a coat, you are getting colder...";
+
+       if (differenceValue >= 50) {feedbackString = "You are artic Cold";}
   		 else if (differenceValue >= 30) {feedbackString = "You are Alaska Cold";}
-  		 else if (differenceValue >= 15) {feedbackString = "Chicago Cold";}
-  		 else if (differenceValue >= 10) {feedbackString = "Florida Warm";}
-  		 else if (differenceValue >= 5) {feedbackString = "Mexico Hot";}
-  		 else if (differenceValue >= 1) {feedbackString = "So close, don't melt.";}
-  		 
+  		 else if (differenceValue >= 15) {feedbackString = "Getting Chicago Cold";}
+  		 else if (differenceValue >= 10) {feedbackString = "You are Florida Warm";}
+  		 else if (differenceValue >= 3) {feedbackString = "Hot Mexico Hot";}
+  		 else if (differenceValue >= 1) {feedbackString = "So close, about to melt.";}
+  		
+       //this can be moved out to a different method for adding the hot or cold logic. 
+       if (guessCount == 1)  //don't do hotter or colder if first guess
+       {
+          feedbackString = feedbackString;
+       }
+       else if (differenceValue > guessDifferenceArray[guessDifferenceArray.length - 2]){
+          feedbackString = colderText + feedbackString;
+       }
+       else
+       {
+          feedbackString = hotterText + feedbackString;
+       }
+
+
   		 $("#feedback").text(feedbackString);
   	}
 
