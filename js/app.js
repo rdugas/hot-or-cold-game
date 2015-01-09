@@ -163,6 +163,7 @@ $(document).ready(function(){
 
        var hotterText = "You are getting warmer, get the sunscreen...";
        var colderText = "Put on a coat, you are getting colder...";
+       var sameText = "You must like it here, you are still just as far away...";
 
        if (differenceValue >= 50) {feedbackString = "You are artic Cold";}
   		 else if (differenceValue >= 30) {feedbackString = "You are Alaska Cold";}
@@ -176,12 +177,15 @@ $(document).ready(function(){
        {
           feedbackString = feedbackString;
        }
-       else if (differenceValue > guessDifferenceArray[guessDifferenceArray.length - 2]){
+       else if (differenceValue > guessDifferenceArray[guessDifferenceArray.length - 2]){ //could change to length -1 if change when the guessCount set
           feedbackString = colderText + feedbackString;
        }
-       else
-       {
+       else if (differenceValue < guessDifferenceArray[guessDifferenceArray.length - 2]){
           feedbackString = hotterText + feedbackString;
+       }
+       else if (differenceValue == guessDifferenceArray[guessDifferenceArray.length - 2]){
+
+          feedbackString = sameText + feedbackString;   //will happen if guess same thing twice or number same difference away.
        }
 
 
